@@ -5,6 +5,8 @@ const { Server } = require("socket.io");
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 
+const {createTask} = require('./databases/utilities/createTask');
+
 const app = express();
 const PORT = 3000;
 const httpServer = createServer(app);
@@ -39,27 +41,7 @@ io.on('connection', (socket) => {
 });
 
 app.post('/create-task', (req, res) => {
-  console.log(req.body);
+  createTask(req.body);
   res.end();
 })
-
-
-const db = new sqlite3.Database('./databases/progress.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.error(err.message);
-  } else {
-    console.log('Connected to the progress database.');
-  }
-});
-
-const {findMaxID} = require('./databases/utilities/findMaxID.js');
-findMaxID(db, 'progress', 'task_id').then(res => console.log("max_id:", res));
-
-db.close((err) => {
-  if (err) {
-    console.error(err.message);
-  } else {
-    console.log('Closed the progress database.');
-  }
-});
 
