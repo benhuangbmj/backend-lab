@@ -1,5 +1,3 @@
-const { openDatabase } = require("./openDatabase.js");
-
 const insertToTable = (db, tbName, row,callback) => {
   let columns = [];
   let values = [];

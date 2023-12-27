@@ -6,6 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 
 const {createTask} = require('./databases/utilities/createTask');
+const {selectAll} = require('./databases/utilities/selectAll');
 
 const app = express();
 const PORT = 3000;
@@ -45,3 +46,4 @@ app.post('/create-task', (req, res) => {
   res.end();
 })
 
+selectAll('progress', 'progress').then(res => console.log(res));
