@@ -1,12 +1,15 @@
 const closeDatabase = (db, dbName) => {
-  const callback = (err) => {
-    if (err) {
-      console.error(err.message);
-    } else {
-      console.log(`Closed the database ${dbName}.`);
-    }
-  };
-  db.close(callback);
-}
+  return new Promise((res, rej) => {
+    db.close((err) => {
+      if (err) {
+        console.log(err.message);
+        rej(err);
+      } else {
+        console.log(`Closed the ${dbName} database.`);
+        res();
+      }
+    });
+  });
+};
 
 exports.closeDatabase = closeDatabase;

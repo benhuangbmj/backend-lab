@@ -1,7 +1,7 @@
 const { openDatabase } = require("./openDatabase.js");
-//const { closeDatabase } = require("./closeDatabase.js");
 
 const selectAll = (dbName, tbName) => {
+  
   const db = openDatabase(dbName);
   const sql = `SELECT * FROM ${tbName}`;
   return new Promise((resolve, reject) => {

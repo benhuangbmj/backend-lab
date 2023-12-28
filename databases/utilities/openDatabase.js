@@ -6,6 +6,7 @@ function openDatabase(dbName) {
     sqlite3.OPEN_READWRITE,
     (err) => {
       if (err) {
+        console.log('openDatabase', dbName);
         console.error(err.message);
       } else {
         console.log(`Connected to the ${dbName} database.`);
