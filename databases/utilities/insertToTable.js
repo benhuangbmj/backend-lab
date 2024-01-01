@@ -1,4 +1,4 @@
-const insertToTable = (db, tbName, row,callback) => {
+const insertToTable = (db, tbName, row, callback) => {
   let columns = [];
   let values = [];
 

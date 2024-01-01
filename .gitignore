@@ -2,3 +2,4 @@ node_modules
 .upm
 *.db
 tests
+*.sql
