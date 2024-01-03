@@ -2,31 +2,31 @@ const { openDatabase } = require("./openDatabase.js");
 const { closeDatabase } = require("./closeDatabase.js");
 const { selectAll } = require("./selectAll.js");
 
-const {Shared} = require('./shared');
+const { Shared } = require("./shared");
 const shared = new Shared();
 
-const updateTask = (dbName, tbName, data, io=null) => {
+const updateTask = (dbName, tbName, data, io = null) => {
   const db = openDatabase(dbName);
-  let columns=[];
+  let columns = [];
   for (let key in data) {
     if (key != "task_id") {
       columns.push(key);
     }
   }
   let sql = `UPDATE ${tbName} SET`;
-  columns.forEach((e,i) => {    
+  columns.forEach((e, i) => {
     sql += ` ${e} = ?`;
-    if (i < columns.length-1) {
+    if (i < columns.length - 1) {
       sql += ",";
     }
   });
   sql += ` WHERE task_id = ?`;
-  
+
   const output = new Promise((res, rej) => {
     const parameters = [];
-    columns.forEach(e => {
+    columns.forEach((e) => {
       parameters.push(data[e]);
-    })
+    });
     parameters.push(data.task_id);
     db.run(sql, parameters, (err) => {
       if (err) {
@@ -35,15 +35,7 @@ const updateTask = (dbName, tbName, data, io=null) => {
       } else {
         closeDatabase(db, dbName)
           .then(() => {
-            if(io) {
-                selectAll(shared.mainDatabase, 'progress')
-                .then((data) => {
-                  io.emit("receiveDisplay", data);
-                })
-                .catch((err) => {
-                  io.emit("receiveDisplay", err);
-                });
-            }            
+            if (io) io.emit("taskUpdated");
             res([sql, parameters]);
           })
           .catch((err) => {
