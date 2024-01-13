@@ -137,7 +137,7 @@ app.get('/deploy', (req, res) => {
 
 app.get("/", (req, res) => {
   const message = `<p style="color: green; width: fit-content; margin: auto; text-align: center">
-  Backend Lab
+  Backend Lab v0.5.0
   <br> 
   by Ben Huang
   <br> 
