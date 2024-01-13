@@ -1,3 +1,6 @@
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
 const express = require("express");
 const cors = require("cors");
 const { createServer } = require("http");
@@ -16,12 +19,18 @@ const mainDatabase = shared.mainDatabase;
 
 const app = express();
 const PORT = 3000;
-const httpServer = createServer(app);
+const httpsServer = https.createServer({
+  key: fs.readFileSync(path.join(__dirname,  
+            "certificates", "ssl-key.pem")), 
+  cert: fs.readFileSync(path.join(__dirname, 
+      "certificates", "ssl-cert.pem")),
+}, app);
+//const httpServer = createServer(app);
 const allowedOrigins = ['https://5f1d88b5-ed3b-45d6-a38a-68cb84d353e4-00-1x48ujq5y989b.global.replit.dev', 'https://f6ed8a6e-dc13-4fc5-acb1-8fc2d046a998-00-302k4b0c8frun.global.replit.dev'];
 const corsOptions = {
   origin: allowedOrigins,
 }
-const io = new Server(httpServer, {
+const io = new Server(httpsServer, {
   cors: {
     origin: allowedOrigins,
     AccessControlAllowOrigin: allowedOrigins,
@@ -30,8 +39,8 @@ const io = new Server(httpServer, {
   },
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+httpsServer.listen(PORT, () => {
+  console.log(`Https Server is listening on port ${PORT}`);
 });
 
 app.use(cors(corsOptions));
@@ -131,4 +140,3 @@ app.get("/", (req, res) => {
     Messiah University`)*/
   res.send(p);
 });
-

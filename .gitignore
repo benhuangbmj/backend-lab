@@ -4,3 +4,4 @@ node_modules
 tests
 *.sql
 package-lock.json
+*.pem
