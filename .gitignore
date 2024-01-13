@@ -4,5 +4,10 @@ node_modules
 tests
 *.sql
 package-lock.json
+<<<<<<< HEAD
 *.sh
 certificates
+=======
+*.pem
+*.sh
+>>>>>>> ssl
