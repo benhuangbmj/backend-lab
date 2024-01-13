@@ -117,4 +117,18 @@ app.get("/supervisees", async (req, res) => {
   res.json(supervisees);
 });
 
+app.get("/", (req, res) => {
+  const p = `<p style="color: green; width: fit-content; margin: auto; text-align: center">
+  Backend Lab
+  <br> 
+  by Ben Huang
+  <br> 
+  Messiah University
+  </p>`;
+
+  /*res.send(`Backend Lab\n 
+    by Ben Huang\n 
+    Messiah University`)*/
+  res.send(p);
+});
 

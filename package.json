@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,8 @@
     "node-fetch": "^3.2.6",
     "socket.io": "^4.7.2",
     "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
