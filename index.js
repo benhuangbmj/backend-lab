@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const sqlite3 = require("sqlite3").verbose();
+const { exec } = require('node:child_process')
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -121,6 +122,18 @@ app.get("/supervisees", async (req, res) => {
   supervisees = supervisees.map(e => e.user);
   res.json(supervisees);
 });
+
+app.get('/deploy', (req, res) => {
+  console.log('deploy!');
+  exec('git pull', (err, output) => {
+    if(err) {
+      console.log(err);
+    } else {
+      console.log(output);
+    }
+  })
+  res.end();
+})
 
 app.get("/", (req, res) => {
   const message = `<p style="color: green; width: fit-content; margin: auto; text-align: center">

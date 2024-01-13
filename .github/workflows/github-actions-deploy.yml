@@ -5,4 +5,4 @@ jobs:
   Deploy-the-current-version:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Hello World!'
+      - run: curl https://54.159.195.25:3000/deploy
