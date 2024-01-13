@@ -26,7 +26,7 @@ const httpsServer = https.createServer({
       "certificates", "ssl-cert.pem")),
 }, app);
 //const httpServer = createServer(app);
-const allowedOrigins = ['https://5f1d88b5-ed3b-45d6-a38a-68cb84d353e4-00-1x48ujq5y989b.global.replit.dev', 'https://f6ed8a6e-dc13-4fc5-acb1-8fc2d046a998-00-302k4b0c8frun.global.replit.dev'];
+const allowedOrigins = ['https://5f1d88b5-ed3b-45d6-a38a-68cb84d353e4-00-1camjx4r35yd1.kirk.replit.dev', 'https://f6ed8a6e-dc13-4fc5-acb1-8fc2d046a998-00-302k4b0c8frun.global.replit.dev'];
 const corsOptions = {
   origin: allowedOrigins,
 }
