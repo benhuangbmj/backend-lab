@@ -1,0 +1,8 @@
+name: Deploy to AWS
+run-name: ${{github.actor}} is deploying to AWS
+on: push
+jobs:
+  Deploy the current version:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Hello World!'
