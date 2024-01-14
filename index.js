@@ -1,4 +1,6 @@
-const https = require('https');
+require('dotenv').config();
+
+const https = require(process.env.PROTOCOL);
 const path = require('path');
 const fs = require('fs');
 const express = require("express");
@@ -12,18 +14,19 @@ const { exec } = require('node:child_process')
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
 const { updateTask } = require("./databases/utilities/updateTask");
+const {utils: tools} = require('./utils/utils.js');
 const {utils} = require("./databases/utilities/utils");
 const { Shared } = require("./databases/utilities/shared");
 const shared = new Shared();
 const mainDatabase = shared.mainDatabase;
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const httpsServer = https.createServer({
   key: fs.readFileSync(path.join(__dirname, "certificates", "ssl-key.pem")), 
   cert: fs.readFileSync(path.join(__dirname, "certificates", "ssl-cert.pem")),
 }, app);
-const allowedOrigins = ['https://5f1d88b5-ed3b-45d6-a38a-68cb84d353e4-00-1camjx4r35yd1.kirk.replit.dev', 'https://f6ed8a6e-dc13-4fc5-acb1-8fc2d046a998-00-302k4b0c8frun.global.replit.dev'];
+const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 const corsOptions = {
   origin: allowedOrigins,
 }
@@ -35,6 +38,7 @@ const io = new Server(httpsServer, {
     credentials: true,
   },
 });
+
 
 httpsServer.listen(PORT, () => {
   console.log(`Https Server is listening on port ${PORT}`);

@@ -6,3 +6,4 @@ tests
 package-lock.json
 *.sh
 certificates
+.env
