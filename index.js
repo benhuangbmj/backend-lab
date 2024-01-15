@@ -56,7 +56,7 @@ app.use('/src/img', express.static(path.resolve(__dirname, '..', 'cmp-lab-schedu
 
 
 
-//move the following class to a separate file
+//issue: move the following class to a separate file
 class SocketIo {
   constructor(io) {
     this.io = io;
@@ -118,6 +118,7 @@ class SocketIo {
     });    
   }
 }
+//end of issue
 
 const myIo = new SocketIo(io);
 myIo.handleConnect();
@@ -134,22 +135,12 @@ app.get("/supervisees", async (req, res) => {
   res.json(supervisees);
 });
 
-app.get('/deploy', (req, res) => {
-  /*
-  console.log('deploy!');
-  exec('git pull', (err, output) => {
-    if(err) {
-      console.log(err);
-    } else {
-      console.log(output);
-    }
-  })*/
+app.get('/deploy', (req, res) => {  
   const repo = req.query.repo;
-  const token = req.query.token;
-  if(token == process.env.SECRET_TOKEN) {
+  {
     switch (repo) {
     case 'backend':
-      exec('ls', (err, output) => {
+      exec('git pull', (err, output) => {
         if(err) {
           res.send(err);
         }
@@ -157,7 +148,7 @@ app.get('/deploy', (req, res) => {
       });
       break;
     case 'frontend':
-      exec('cd ../cmp-lab-schedule && ls', (err, output) => {
+      exec('cd ../cmp-lab-schedule && git pull', (err, output) => {
         if(err) {
           res.send(err);
         }
@@ -167,8 +158,6 @@ app.get('/deploy', (req, res) => {
     default:
       res.send('Can\'t find the repo');
     }
-  } else {
-    res.send('Invalid token');
   }
 });
 
