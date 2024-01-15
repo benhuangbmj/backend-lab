@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const https = require(process.env.PROTOCOL);
+const https = require(process.env.PROTOCOL);//issue: modify this part so that the server can be created according to the protocol
 const path = require('path');
 const fs = require('fs');
 const express = require("express");
@@ -135,6 +135,7 @@ app.get("/supervisees", async (req, res) => {
 });
 
 app.get('/deploy', (req, res) => {
+  /*
   console.log('deploy!');
   exec('git pull', (err, output) => {
     if(err) {
@@ -142,9 +143,34 @@ app.get('/deploy', (req, res) => {
     } else {
       console.log(output);
     }
-  })
-  res.end();
-})
+  })*/
+  const repo = req.query.repo;
+  const token = req.query.token;
+  if(token == process.env.SECRET_TOKEN) {
+    switch (repo) {
+    case 'backend':
+      exec('ls', (err, output) => {
+        if(err) {
+          res.send(err);
+        }
+        res.send(output);
+      });
+      break;
+    case 'frontend':
+      exec('cd ../cmp-lab-schedule && ls', (err, output) => {
+        if(err) {
+          res.send(err);
+        }
+        res.send(output);
+      });
+      break;
+    default:
+      res.send('Can\'t find the repo');
+    }
+  } else {
+    res.send('Invalid token');
+  }
+});
 
 app.get("/", (req, res) => {
   const message = `<p style="color: green; width: fit-content; margin: auto; text-align: center">
