@@ -1,8 +1,0 @@
-name: Deploy to AWS
-run-name: ${{github.actor}} is deploying to AWS
-on: push
-jobs:
-  Deploy-the-current-version:
-    runs-on: ubuntu-latest
-    steps:
-      - run: curl -k https://54.159.195.25:3000/deploy
