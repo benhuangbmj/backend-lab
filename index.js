@@ -41,7 +41,7 @@ const io = new Server(myServer, {
 function createMyServer(protocol, port, app) {
   const myProtocol = require(protocol);
   if(protocol == 'http') {
-    return myProtocol.creatServer(app);
+    return myProtocol.createServer(app);
   }
   if(protocol == 'https') {
     return myProtocol.createServer({
