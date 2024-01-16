@@ -23,7 +23,7 @@ const mainDatabase = shared.mainDatabase;
 const app = express();
 const port = process.env.PORT || 3000;
 
-const myServer = createMyServer(protocol, port, app);
+const myServer = createMyServer(protocol, app);
 const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 const corsOptions = {
   origin: allowedOrigins,
@@ -38,7 +38,7 @@ const io = new Server(myServer, {
 });
 
 //issue: move the following function to another file
-function createMyServer(protocol, port, app) {
+function createMyServer(protocol, app) {
   const myProtocol = require(protocol);
   if(protocol == 'http') {
     return myProtocol.createServer(app);
