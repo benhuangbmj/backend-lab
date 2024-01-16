@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const https = require(process.env.PROTOCOL);//issue: modify this part so that the server can be created according to the protocol
+const protocol = process.env.PROTOCOL;
 const path = require('path');
 const fs = require('fs');
 const express = require("express");
@@ -21,16 +21,14 @@ const shared = new Shared();
 const mainDatabase = shared.mainDatabase;
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const httpsServer = https.createServer({
-  key: fs.readFileSync(path.join(__dirname, "certificates", "ssl-key.pem")), 
-  cert: fs.readFileSync(path.join(__dirname, "certificates", "ssl-cert.pem")),
-}, app);
+const port = process.env.PORT || 3000;
+
+const myServer = createMyServer(protocol, port, app);
 const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 const corsOptions = {
   origin: allowedOrigins,
 }
-const io = new Server(httpsServer, {
+const io = new Server(myServer, {
   cors: {
     origin: allowedOrigins,
     AccessControlAllowOrigin: allowedOrigins,
@@ -39,9 +37,22 @@ const io = new Server(httpsServer, {
   },
 });
 
+//issue: move the following function to another file
+function createMyServer(protocol, port, app) {
+  const myProtocol = require(protocol);
+  if(protocol == 'http') {
+    return myProtocol.creatServer(app);
+  }
+  if(protocol == 'https') {
+    return myProtocol.createServer({
+  key: fs.readFileSync(path.join(__dirname, "certificates", "ssl-key.pem")), 
+  cert: fs.readFileSync(path.join(__dirname, "certificates", "ssl-cert.pem")),
+}, app);
+  }
+}
 
-httpsServer.listen(PORT, () => {
-  console.log(`Https Server is listening on port ${PORT}`);
+myServer.listen(port, () => {
+  console.log(`My ${protocol} server is listening on port ${port}`);
 });
 
 app.use(cors(corsOptions));
