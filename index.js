@@ -159,7 +159,7 @@ app.get('/deploy', (req, res) => {
       });
       break;
     case 'frontend':
-      exec('cd ../cmp-lab-schedule && git pull', (err, output) => {
+      exec('cd ../cmp-lab-schedule && git pull && npm run build', (err, output) => {
         if(err) {
           res.send(err);
         }
