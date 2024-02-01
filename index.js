@@ -59,10 +59,8 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use('/home', express.static(path.join(__dirname, '..', 'cmp-lab-schedule', 'dist')));
+app.use('/', express.static(path.join(__dirname, '..', 'cmp-lab-schedule', 'dist')));
 //issue: the following rules are in place to fix the incorrect routing of the vite build. Figure out how to configure vite properly to advoid this issue systematically
-app.use('/', express.static(path.resolve(__dirname, '..', 'cmp-lab-schedule/public')));
-app.use('/home/src/img', express.static(path.resolve(__dirname, '..', 'cmp-lab-schedule/src/img')));
 app.use('/src/img', express.static(path.resolve(__dirname, '..', 'cmp-lab-schedule/src/img')));
 
 
@@ -172,6 +170,7 @@ app.get('/deploy', (req, res) => {
   }
 });
 
+/*
 app.get("/", (req, res) => {
   const message = `<p style="color: green; width: fit-content; margin: auto; text-align: center">
   Backend Lab v0.5.0
@@ -181,8 +180,8 @@ app.get("/", (req, res) => {
   Messiah University
   </p>`;
   res.send(message);
-});
+});*/ //delete: doesn't serve any purpose any more
 
 app.get("*", (req, res) => {
-  res.redirect('/home');
+  res.redirect('/');
 });//issue: Fallback route. The react router is not compatible with express router as of now.
