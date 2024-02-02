@@ -45,12 +45,11 @@ function createMyServer(protocol, app) {
   }
   if(protocol == 'https') {
     return myProtocol.createServer({
-  key: fs.readFileSync(path.join(__dirname, "certificates", "ssl-key.pem")), 
-  cert: fs.readFileSync(path.join(__dirname, "certificates", "ssl-cert.pem")),
+  key: fs.readFileSync(process.env.KEY_PATH), 
+  cert: fs.readFileSync(process.env.CERT_PATH),
 }, app);
   }
 }
-
 myServer.listen(port, () => {
   console.log(`My ${protocol} server is listening on port ${port}`);
 });
