@@ -1,10 +1,4 @@
-const utils = require("./utils").utils;
-
-const { Shared } = require("./shared");
-const shared = new Shared();
-
-const createTable = async (tableName, columns) => {
-	const db = await utils.openDatabase(shared.mainDatabase);
+const createTable = (db, tableName, columns) => {
 	let sql = `CREATE TABLE IF NOT EXISTS ${tableName} (\n`;
 	columns.forEach((column) => {
 		sql += `${column} TEXT,\n`;
@@ -15,7 +9,6 @@ const createTable = async (tableName, columns) => {
 			console.error(err.message);
 		} else {
 			console.log(`Created the table ${tableName}.`);
-			utils.closeDatabase(db, shared.mainDatabase);
 		}
 	});
 };
