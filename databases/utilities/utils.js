@@ -7,3 +7,4 @@ utils.selectByUser = require("./selectByUser").selectByUser;
 utils.selectSupervisees = require("./selectSupervisees").selectSupervisees;
 utils.createTable = require("./createTable").createTable;
 utils.insertToTable = require("./insertToTable").insertToTable;
+utils.selectAll = require("./selectAll");

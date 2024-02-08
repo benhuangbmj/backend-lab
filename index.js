@@ -204,6 +204,11 @@ app.post("/upload-usage", async (req, res) => {
   });
 });
 
+app.get("/usage", async (req, res) => {
+  const output = await utils.selectAll(mainDatabase, "usage");
+  output && res.json(output);
+});
+
 app.get("/about", (req, res) => {
   const message = `<p style="color: green; width: fit-content; margin: auto; text-align: center">
   Backend Lab v0.6.0
