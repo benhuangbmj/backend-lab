@@ -205,6 +205,7 @@ app.post("/upload-usage", async (req, res) => {
 });
 
 app.get("/usage", async (req, res) => {
+  /*
   const db = await utils.openDatabase(mainDatabase);
   const sqlCheckTable = "SELECT name FROM sqlite_schema WHERE name='usage'";
   db.all(sqlCheckTable, [], async (err, rows) => {
@@ -218,7 +219,14 @@ app.get("/usage", async (req, res) => {
         res.json(null);
       }
     }
-  });
+  });*/
+  try {
+    const output = await utils.selectAll(mainDatabase, "usage");
+    output && res.json(output);
+  } catch (e) {
+    console.error(e);
+    res.json(null);
+  }
 });
 
 app.get("/about", (req, res) => {
