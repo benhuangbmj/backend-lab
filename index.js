@@ -205,8 +205,20 @@ app.post("/upload-usage", async (req, res) => {
 });
 
 app.get("/usage", async (req, res) => {
-  const output = await utils.selectAll(mainDatabase, "usage");
-  output && res.json(output);
+  const db = await utils.openDatabase(mainDatabase);
+  const sqlCheckTable = "SELECT name FROM sqlite_schema WHERE name='usage'";
+  db.all(sqlCheckTable, [], async (err, rows) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      if (rows && rows.length > 0) {
+        const output = await utils.selectAll(mainDatabase, "usage");
+        output && res.json(output);
+      } else {
+        res.json(null);
+      }
+    }
+  });
 });
 
 app.get("/about", (req, res) => {
