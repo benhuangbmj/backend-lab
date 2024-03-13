@@ -1,4 +1,11 @@
-const insertToTable = async (db, tbName, row, callback, remainOpen = false) => {
+const insertToTable = async ({
+  db,
+  tbName,
+  row,
+  callback,
+  remainOpen = false,
+  io,
+}) => {
   if (!db) {
     const openDatabase = require("./utils").utils.openDatabase;
     const { Shared } = require("./shared");
@@ -20,6 +27,7 @@ const insertToTable = async (db, tbName, row, callback, remainOpen = false) => {
       setTimeout(callback, 2000);
     } else {
       console.log(`A row has been inserted into ${tbName}`);
+      if (io) io.emit("taskUpdated");
     }
   });
   if (!remainOpen) {

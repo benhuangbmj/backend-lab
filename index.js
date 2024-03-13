@@ -144,7 +144,7 @@ const myIo = new SocketIo(io);
 myIo.handleConnect();
 
 app.post("/create-task", (req, res) => {
-  createTask(req.body);
+  createTask(req.body, io);
   res.send(true);
 });
 
@@ -193,7 +193,13 @@ app.post("/upload-usage", async (req, res) => {
     utils.createTable(db, "usage", columns);
     db.parallelize(function () {
       dataset.forEach((e) => {
-        utils.insertToTable(db, "usage", e, () => {}, true);
+        utils.insertToTable({
+          db: db,
+          tbName: "usage",
+          row: e,
+          callback: () => {},
+          remainOpen: true,
+        });
       });
     });
     db.close((err) => {
