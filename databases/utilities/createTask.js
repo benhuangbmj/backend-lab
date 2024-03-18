@@ -1,11 +1,10 @@
-const { findMaxID } = require("./findMaxID");
-const { openDatabase } = require("./openDatabase");
-const { insertToTable } = require("./insertToTable");
-
-const { Shared } = require("./shared");
-const shared = new Shared();
-
 const createTask = async (task, io) => {
+  const { findMaxID } = require("./findMaxID");
+  const { openDatabase } = require("./openDatabase");
+  const { insertToTable } = require("./insertToTable");
+
+  const { Shared } = require("./shared");
+  const shared = new Shared();
   const db = openDatabase(shared.mainDatabase);
   const currMaxID = (await findMaxID(db, "progress", "task_id")) || 0;
   let row = {

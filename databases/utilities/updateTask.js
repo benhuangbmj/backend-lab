@@ -2,9 +2,6 @@ const { openDatabase } = require("./openDatabase.js");
 const { closeDatabase } = require("./closeDatabase.js");
 const { selectAll } = require("./selectAll.js");
 
-const { Shared } = require("./shared");
-const shared = new Shared();
-
 const updateTask = (dbName, tbName, data, io = null) => {
   const db = openDatabase(dbName);
   let columns = [];

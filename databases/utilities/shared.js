@@ -4,10 +4,14 @@ const { closeDatabase } = require("./closeDatabase");
 class Shared {
   constructor() {
     this.mainDatabase = "math_lab";
+    this.mainDb = null;
+  }
+  openMainDb() {
     this.mainDb = openDatabase(this.mainDatabase);
+    return this.mainDb;
   }
   closeMainDb() {
-    closeDatabase(this.mainDb, this.mainDatabase);
+    if (this.mainDb) closeDatabase(this.mainDb, this.mainDatabase);
   }
 }
 
