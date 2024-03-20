@@ -1,4 +1,4 @@
-function deleteTask(taskId) {
+function deleteTask(taskId, io) {
 	const { utils } = require("./utils");
 	const { Shared } = require("./shared");
 	const shared = new Shared();
@@ -9,6 +9,7 @@ function deleteTask(taskId) {
 			console.log(err);
 		} else {
 			shared.closeMainDb();
+			io.emit("taskUpdated");
 		}
 	});
 }

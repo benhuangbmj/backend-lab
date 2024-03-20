@@ -248,7 +248,7 @@ app.get("/about", (req, res) => {
 });
 
 app.post("/delete-task", (req, res) => {
-  utils.deleteTask(req.body);
+  utils.deleteTask(req.body, io);
 });
 
 app.get("*", (req, res) => {
