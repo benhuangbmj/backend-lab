@@ -149,13 +149,18 @@ app.post("/create-task", (req, res) => {
   res.send(true);
 });
 
+app.post("/edit-task", (req, res) => {
+  updateTask(mainDatabase, "progress", req.body, io);
+  res.send(true);
+});
+
 app.get("/supervisees", async (req, res) => {
   const user = req.query.user;
   let supervisees = await utils.selectSupervisees(user);
   supervisees = supervisees.map((e) => e.user);
   res.json(supervisees);
 });
-
+/*
 app.get("/deploy", (req, res) => {
   const repo = req.query.repo;
   {
@@ -184,7 +189,7 @@ app.get("/deploy", (req, res) => {
     }
   }
 });
-
+*/
 app.post("/upload-usage", async (req, res) => {
   const columns = req.body.meta.fields;
   const dataset = req.body.data;
