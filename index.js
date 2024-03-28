@@ -196,8 +196,13 @@ app.post("/upload-usage", async (req, res) => {
   const dataset = req.body.data;
   const db = await utils.openDatabase(mainDatabase);
   db.serialize(function () {
-    db.run("DROP TABLE IF EXISTS usage");
-    utils.createTable(db, "usage", columns);
+    db.get(
+      `SELECT name FROM sqlite_master WHERE type="table" AND name="usage"`,
+      (err, row) => {
+        if (err) console.log(err);
+        else if (!row) utils.createTable(db, "usage", columns);
+      },
+    );
     db.parallelize(function () {
       dataset.forEach((e) => {
         utils.insertToTable({
