@@ -11,6 +11,7 @@ const cookieParser = require("cookie-parser");
 const sqlite3 = require("sqlite3").verbose();
 const { exec } = require("node:child_process");
 const _ = require("lodash");
+const { google } = require("googleapis");
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -259,3 +260,30 @@ app.post("/delete-task", (req, res) => {
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
+
+//experiment the google api:
+async function authSheets() {
+  const auth = new google.auth.GoogleAuth({
+    keyFile: process.env.GOOGLE_CREDENTIAL,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+  const authClient = await auth.getClient();
+
+  const sheets = google.sheets({ version: "v4", auth: authClient });
+  return {
+    auth,
+    authClient,
+    sheets,
+  };
+}
+
+async function readSheets(id, range) {
+  const { sheets } = await authSheets();
+  const getRows = await sheets.spreadsheets.values.get({
+    spreadsheetId: id,
+    range: range,
+  });
+  console.log(getRows.data);
+}
+
+readSheets(process.env.GOOGLE_SHEET_ID, "Sheet1");
