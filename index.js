@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const sqlite3 = require("sqlite3").verbose();
 const { exec } = require("node:child_process");
 const _ = require("lodash");
-const { google } = require("googleapis");
+const cron = require("node-cron");
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -21,6 +21,10 @@ const { utils } = require("./databases/utilities/utils");
 const { Shared } = require("./databases/utilities/shared");
 const shared = new Shared();
 const mainDatabase = shared.mainDatabase;
+
+cron.schedule("59 23 * * 1,2,3,4", () => {
+  utils.updateUsage();
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -223,21 +227,6 @@ app.post("/upload-usage", async (req, res) => {
 });
 
 app.get("/usage", async (req, res) => {
-  /*
-  const db = await utils.openDatabase(mainDatabase);
-  const sqlCheckTable = "SELECT name FROM sqlite_schema WHERE name='usage'";
-  db.all(sqlCheckTable, [], async (err, rows) => {
-    if (err) {
-      console.error(err.message);
-    } else {
-      if (rows && rows.length > 0) {
-        const output = await utils.selectAll(mainDatabase, "usage");
-        output && res.json(output);
-      } else {
-        res.json(null);
-      }
-    }
-  });*/
   try {
     const output = await utils.selectAll(mainDatabase, "usage");
     output && res.json(output);
@@ -265,30 +254,3 @@ app.post("/delete-task", (req, res) => {
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
-
-//experiment the google api:
-async function authSheets() {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: process.env.GOOGLE_CREDENTIAL,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
-  const authClient = await auth.getClient();
-
-  const sheets = google.sheets({ version: "v4", auth: authClient });
-  return {
-    auth,
-    authClient,
-    sheets,
-  };
-}
-
-async function readSheets(id, range) {
-  const { sheets } = await authSheets();
-  const getRows = await sheets.spreadsheets.values.get({
-    spreadsheetId: id,
-    range: range,
-  });
-  console.log(getRows.data);
-}
-
-readSheets(process.env.GOOGLE_SHEET_ID, "Sheet1");
