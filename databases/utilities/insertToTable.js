@@ -2,7 +2,7 @@ const insertToTable = async ({
   db,
   tbName,
   row,
-  callback,
+  callback = () => {},
   remainOpen = false,
   io,
 }) => {
