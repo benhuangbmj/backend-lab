@@ -10,3 +10,4 @@ certificates
 .env
 scripts/
 credentials/
+backup/
