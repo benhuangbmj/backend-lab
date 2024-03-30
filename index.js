@@ -16,13 +16,14 @@ const cron = require("node-cron");
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
 const { updateTask } = require("./databases/utilities/updateTask");
-const { utils: tools } = require("./utils/utils.js");
+const tools = require("./utils/utils.js");
 const { utils } = require("./databases/utilities/utils");
 const { Shared } = require("./databases/utilities/shared");
 const shared = new Shared();
 const mainDatabase = shared.mainDatabase;
 
-cron.schedule("59 23 * * 1,2,3,4", () => {
+cron.schedule("59 23 * * *", () => {
+  tools.backupUsers();
   utils.updateUsage();
 });
 
@@ -165,36 +166,7 @@ app.get("/supervisees", async (req, res) => {
   supervisees = supervisees.map((e) => e.user);
   res.json(supervisees);
 });
-/*
-app.get("/deploy", (req, res) => {
-  const repo = req.query.repo;
-  {
-    switch (repo) {
-      case "backend":
-        exec("git pull", (err, output) => {
-          if (err) {
-            res.send(err);
-          }
-          res.send(output);
-        });
-        break;
-      case "frontend":
-        exec(
-          "cd ../cmp-lab-schedule && git pull && npm run build",
-          (err, output) => {
-            if (err) {
-              res.send(err);
-            }
-            res.send(output);
-          },
-        );
-        break;
-      default:
-        res.send("Can't find the repo");
-    }
-  }
-});
-*/
+
 app.post("/upload-usage", async (req, res) => {
   const columns = req.body.meta.fields;
   const dataset = req.body.data;
@@ -254,3 +226,34 @@ app.post("/delete-task", (req, res) => {
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
+
+/*
+app.get("/deploy", (req, res) => {
+  const repo = req.query.repo;
+  {
+    switch (repo) {
+      case "backend":
+        exec("git pull", (err, output) => {
+          if (err) {
+            res.send(err);
+          }
+          res.send(output);
+        });
+        break;
+      case "frontend":
+        exec(
+          "cd ../cmp-lab-schedule && git pull && npm run build",
+          (err, output) => {
+            if (err) {
+              res.send(err);
+            }
+            res.send(output);
+          },
+        );
+        break;
+      default:
+        res.send("Can't find the repo");
+    }
+  }
+});
+*/
