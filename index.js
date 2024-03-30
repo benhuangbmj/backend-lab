@@ -22,10 +22,24 @@ const { Shared } = require("./databases/utilities/shared");
 const shared = new Shared();
 const mainDatabase = shared.mainDatabase;
 
-cron.schedule("59 23 * * *", () => {
-  tools.backupUsers();
-  utils.updateUsage();
-});
+cron.schedule(
+  "59 23 * * *",
+  () => {
+    try {
+      tools.backupUsers();
+    } catch (err) {
+      console.error(err);
+    }
+    try {
+      utils.updateUsage();
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  {
+    timezone: "America/New_York",
+  },
+);
 
 const app = express();
 const port = process.env.PORT || 3000;
