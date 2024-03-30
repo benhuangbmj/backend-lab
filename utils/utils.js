@@ -1,2 +1,2 @@
-exports.utils = {};
-const utils = exports.utils;
+const backupUsers = require("./backupUsers");
+module.exports = { backupUsers };
