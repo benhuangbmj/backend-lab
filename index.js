@@ -113,6 +113,13 @@ class SocketIo {
     });
   }
 
+  handleBackup(socket) {
+    socket.on("backup", () => {
+      console.log("backup!");
+      socket.emit("backup complete");
+    });
+  }
+
   handleConnect() {
     const io = this.io;
     io.on("connection", (socket) => {
