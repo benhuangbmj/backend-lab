@@ -12,6 +12,7 @@ const sqlite3 = require("sqlite3").verbose();
 const { exec } = require("node:child_process");
 const _ = require("lodash");
 const cron = require("node-cron");
+const passport = require("passport");
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -91,6 +92,54 @@ app.use(
 app.use(
   "/src/img",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/img")),
+);
+var MicrosoftStrategy = require("passport-microsoft").Strategy;
+passport.use(
+  new MicrosoftStrategy(
+    {
+      // Standard OAuth2 options
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/microsoft/callback",
+      scope: ["user.read"],
+
+      // Microsoft specific options
+
+      // [Optional] The tenant for the application. Defaults to 'common'.
+      // Used to construct the authorizationURL and tokenURL
+      tenant: "common",
+
+      // [Optional] The authorization URL. Defaults to `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`
+      authorizationURL:
+        "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+
+      // [Optional] The token URL. Defaults to `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`
+      tokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    },
+    function (accessToken, refreshToken, profile, done) {
+      User.findOrCreate({ userId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
+    },
+  ),
+);
+app.get(
+  "/auth/microsoft",
+  passport.authenticate("microsoft", {
+    // Optionally define any authentication parameters here
+    // For example, the ones in https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
+
+    prompt: "select_account",
+  }),
+);
+
+app.get(
+  "/auth/microsoft/callback",
+  passport.authenticate("microsoft", { failureRedirect: "/about" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.send("Succeeded!");
+  },
 );
 
 //issue: move the following class to a separate file
