@@ -13,6 +13,7 @@ const { exec } = require("node:child_process");
 const _ = require("lodash");
 const cron = require("node-cron");
 const passport = require("passport");
+const session = require("express-session");
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -93,6 +94,24 @@ app.use(
   "/src/img",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/img")),
 );
+app.use(
+  session({
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, //how to make this work?
+      httpOnly: false,
+    },
+  }),
+);
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
 var MicrosoftStrategy = require("passport-microsoft").Strategy;
 passport.use(
   new MicrosoftStrategy(
@@ -100,7 +119,7 @@ passport.use(
       // Standard OAuth2 options
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/microsoft/callback",
+      callbackURL: "https://localhost:3000/auth/microsoft/callback/",
       scope: ["user.read"],
 
       // Microsoft specific options
@@ -117,8 +136,12 @@ passport.use(
       tokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     },
     function (accessToken, refreshToken, profile, done) {
-      User.findOrCreate({ userId: profile.id }, function (err, user) {
-        return done(err, user);
+      process.nextTick(function () {
+        // To keep the example simple, the user's Microsoft Graph profile is returned to
+        // represent the logged-in user. In a typical application, you would want
+        // to associate the Microsoft account with a user record in your database,
+        // and return that user instead.
+        return done(null, profile);
       });
     },
   ),
