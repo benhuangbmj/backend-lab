@@ -1,2 +1,3 @@
 const backupUsers = require("./backupUsers");
-module.exports = { backupUsers };
+const readContentfulUsers = require("./readContentfulUsers");
+module.exports = { backupUsers, readContentfulUsers };
