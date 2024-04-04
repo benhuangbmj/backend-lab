@@ -105,53 +105,37 @@ app.use(
     },
   }),
 );
+app.use(passport.initialize());
+app.use(passport.session());
 passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
+passport.deserializeUser(function (user, done) {
+  done(null, user);
 });
 var MicrosoftStrategy = require("passport-microsoft").Strategy;
 passport.use(
   new MicrosoftStrategy(
     {
-      // Standard OAuth2 options
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://localhost:3000/auth/microsoft/callback/",
+      callbackURL: "https://localhost:3000/auth/microsoft/callback/", // remove this to .env
       scope: ["user.read"],
-
-      // Microsoft specific options
-
-      // [Optional] The tenant for the application. Defaults to 'common'.
-      // Used to construct the authorizationURL and tokenURL
       tenant: "common",
-
-      // [Optional] The authorization URL. Defaults to `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`
       authorizationURL:
         "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-
-      // [Optional] The token URL. Defaults to `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`
       tokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     },
     function (accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        // To keep the example simple, the user's Microsoft Graph profile is returned to
-        // represent the logged-in user. In a typical application, you would want
-        // to associate the Microsoft account with a user record in your database,
-        // and return that user instead.
-        return done(null, profile);
-      });
+      console.log(profile);
+      return done(null, profile);
     },
   ),
 );
 app.get(
   "/auth/microsoft",
   passport.authenticate("microsoft", {
-    // Optionally define any authentication parameters here
-    // For example, the ones in https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
-
     prompt: "select_account",
   }),
 );
@@ -160,8 +144,7 @@ app.get(
   "/auth/microsoft/callback",
   passport.authenticate("microsoft", { failureRedirect: "/about" }),
   function (req, res) {
-    // Successful authentication, redirect home.
-    res.send("Succeeded!");
+    res.redirect("/");
   },
 );
 
