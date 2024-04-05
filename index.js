@@ -89,7 +89,7 @@ app.use(
   "/",
   express.static(path.join(__dirname, "..", "cmp-lab-schedule", "dist")),
 );
-//issue: the following rules are in place to fix the incorrect routing of the vite build. Figure out how to configure vite properly to advoid this issue systematically
+//issue: the following rules are in place to fix the incorrect routing of the vite build. Figure out how to configure vite properly to avoid this issue systematically
 app.use(
   "/src/img",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/img")),
@@ -120,7 +120,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://localhost:3000/auth/microsoft/callback/", // remove this to .env
+      callbackURL: process.env.MICROSOFT_CALLBACK_URL, // remove this to .env
       scope: ["user.read"],
       tenant: "common",
       authorizationURL:
