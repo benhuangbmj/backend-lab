@@ -120,7 +120,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.MICROSOFT_CALLBACK_URL, // remove this to .env
+      callbackURL: process.env.MICROSOFT_CALLBACK_URL,
       scope: ["user.read"],
       tenant: "common",
       authorizationURL:
@@ -128,7 +128,11 @@ passport.use(
       tokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     },
     function (accessToken, refreshToken, profile, done) {
-      console.log(profile);
+      const regexUsername = /[\w\W]+(?=@)/;
+      const regexDomain = /(?<=@)[\w\W]+/;
+      const username = profile.userPrincipalName.match(regexUsername)[0];
+      const domain = profile.userPrincipalName.match(regexDomain)[0];
+      console.log(username, domain);
       return done(null, profile);
     },
   ),
