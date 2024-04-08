@@ -127,13 +127,18 @@ passport.use(
         "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
       tokenURL: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
     },
-    function (accessToken, refreshToken, profile, done) {
+    async function (accessToken, refreshToken, profile, done) {
       const regexUsername = /[\w\W]+(?=@)/;
       const regexDomain = /(?<=@)[\w\W]+/;
       const username = profile.userPrincipalName.match(regexUsername)[0];
       const domain = profile.userPrincipalName.match(regexDomain)[0];
-      console.log(username, domain);
-      return done(null, profile);
+      if (domain == 'messiah.edu') {
+        const users = await tools.readContentfulUsers();
+        if (users.hasOwnProperty(username)) {
+          return done(null, profile);
+        }
+      }
+      return done(null, false);
     },
   ),
 );
