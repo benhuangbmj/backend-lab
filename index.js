@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const protocol = process.env.PROTOCOL;
 const path = require("path");
 const fs = require("fs");
@@ -7,7 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
 const sqlite3 = require("sqlite3").verbose();
 const { exec } = require("node:child_process");
 const _ = require("lodash");
@@ -50,6 +49,8 @@ const myServer = createMyServer(protocol, app);
 const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 const corsOptions = {
   origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 const io = new Server(myServer, {
@@ -82,7 +83,13 @@ myServer.listen(port, () => {
 });
 
 app.use(cors(corsOptions));
-app.use(cookieParser());
+/*app.use(
+  cookieParser(process.env.EXPRESS_SESSION_SECRET, {
+    secure: true,
+    httpOnly: true,
+    sameSite: "none",
+  }),
+);*/
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text({ type: "text/plain" }));
@@ -101,8 +108,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, //how to make this work?
-      httpOnly: false,
+      secure: true,
+      httpOnly: true,
+      sameSite: "none",
     },
   }),
 );
@@ -133,7 +141,7 @@ passport.use(
       const regexDomain = /(?<=@)[\w\W]+/;
       const username = profile.userPrincipalName.match(regexUsername)[0];
       const domain = profile.userPrincipalName.match(regexDomain)[0];
-      if (domain == 'messiah.edu') {
+      if (domain == "messiah.edu") {
         const users = await tools.readContentfulUsers();
         if (users.hasOwnProperty(username)) {
           return done(null, username);
@@ -154,19 +162,17 @@ app.get(
   "/auth/microsoft/callback",
   passport.authenticate("microsoft", { failureRedirect: "/about" }),
   function (req, res) {
-    console.log('callback', req.user);
     res.redirect(process.env.CALLBACK_REDIRECT);
   },
 );
 
-app.get('/login-user', (req, res) => {
-  console.log(req.user);
-  if(req.user) {
+app.get("/login-user", (req, res) => {
+  if (req.user) {
     res.send(req.user);
   } else {
     res.send(false);
   }
-})
+});
 
 //issue: move the following class to a separate file
 class SocketIo {
@@ -312,7 +318,6 @@ app.get("/about", (req, res) => {
   <br> 
   Messiah University
   </p>`;
-  console.log(req.user);//remove
   res.send(message);
 });
 
