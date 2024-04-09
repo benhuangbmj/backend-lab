@@ -50,6 +50,7 @@ const myServer = createMyServer(protocol, app);
 const allowedOrigins = JSON.parse(process.env.ALLOWED_ORIGINS);
 const corsOptions = {
   origin: allowedOrigins,
+  credentials: true,
 };
 const io = new Server(myServer, {
   cors: {
@@ -135,7 +136,7 @@ passport.use(
       if (domain == 'messiah.edu') {
         const users = await tools.readContentfulUsers();
         if (users.hasOwnProperty(username)) {
-          return done(null, profile);
+          return done(null, username);
         }
       }
       return done(null, false);
@@ -153,9 +154,19 @@ app.get(
   "/auth/microsoft/callback",
   passport.authenticate("microsoft", { failureRedirect: "/about" }),
   function (req, res) {
-    res.redirect("/");
+    console.log('callback', req.user);
+    res.redirect(process.env.CALLBACK_REDIRECT);
   },
 );
+
+app.get('/login-user', (req, res) => {
+  console.log(req.user);
+  if(req.user) {
+    res.send(req.user);
+  } else {
+    res.send(false);
+  }
+})
 
 //issue: move the following class to a separate file
 class SocketIo {
@@ -301,6 +312,7 @@ app.get("/about", (req, res) => {
   <br> 
   Messiah University
   </p>`;
+  console.log(req.user);//remove
   res.send(message);
 });
 
