@@ -82,8 +82,8 @@ myServer.listen(port, () => {
   console.log(`My ${protocol} server is listening on port ${port}`);
 });
 
-app.use(cors(corsOptions));
-/*app.use(
+app.use(cors(corsOptions)); /*
+app.use(
   cookieParser(process.env.EXPRESS_SESSION_SECRET, {
     secure: true,
     httpOnly: true,
@@ -166,12 +166,22 @@ app.get(
   },
 );
 
-app.get("/login-user", (req, res) => {
+app.get("/login", (req, res) => {
   if (req.user) {
     res.send(req.user);
   } else {
     res.send(false);
   }
+});
+
+app.post("/logout", function (req, res, next) {
+  req.logout(function (err) {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    res.json(true);
+  });
 });
 
 //issue: move the following class to a separate file
