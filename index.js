@@ -13,6 +13,7 @@ const _ = require("lodash");
 const cron = require("node-cron");
 const passport = require("passport");
 const session = require("express-session");
+const MemoryStore = require('memorystore')(session);
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -105,12 +106,16 @@ app.use(
 app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET,
+    store: new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
     resave: false,
     saveUninitialized: true,
     cookie: {
       secure: true,
       httpOnly: true,
       sameSite: "none",
+      maxAge: 86400000
     },
   }),
 );
