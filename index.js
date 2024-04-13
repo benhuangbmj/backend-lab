@@ -333,6 +333,7 @@ app.get("/about", (req, res) => {
 
 app.post("/delete-task", (req, res) => {
   utils.deleteTask(req.body, io);
+  res.end();
 });
 
 app.get("*", (req, res) => {
