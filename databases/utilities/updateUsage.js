@@ -1,12 +1,12 @@
 require("dotenv").config({ path: "../../.env" });
+const { google } = require("googleapis");
+const auth = new google.auth.GoogleAuth({
+  keyFile: process.env.GOOGLE_CREDENTIAL,
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+});
 
 async function updateUsage() {
   async function authSheets() {
-    const { google } = require("googleapis");
-    const auth = new google.auth.GoogleAuth({
-      keyFile: process.env.GOOGLE_CREDENTIAL,
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
     const authClient = await auth.getClient();
 
     const sheets = google.sheets({ version: "v4", auth: authClient });

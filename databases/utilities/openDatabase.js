@@ -1,8 +1,9 @@
 const sqlite3 = require("sqlite3").verbose();
+const rootPath = __dirname.match(/^[\w\W]+backend-lab\//)[0];
 
 function openDatabase(dbName) {
   return new sqlite3.Database(
-    `../${dbName}.db`,
+    `${rootPath}databases/${dbName}.db`,
     sqlite3.OPEN_READWRITE,
     (err) => {
       if (err) {
