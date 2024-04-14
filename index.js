@@ -13,7 +13,7 @@ const _ = require("lodash");
 const cron = require("node-cron");
 const passport = require("passport");
 const session = require("express-session");
-const MemoryStore = require('memorystore')(session);
+const MemoryStore = require("memorystore")(session);
 
 const { selectAll } = require("./databases/utilities/selectAll");
 const { createTask } = require("./databases/utilities/createTask");
@@ -107,7 +107,7 @@ app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET,
     store: new MemoryStore({
-      checkPeriod: 86400000 // prune expired entries every 24h
+      checkPeriod: 86400000, // prune expired entries every 24h
     }),
     resave: false,
     saveUninitialized: true,
@@ -115,7 +115,7 @@ app.use(
       secure: true,
       httpOnly: true,
       sameSite: "none",
-      maxAge: 86400000
+      maxAge: 86400000,
     },
   }),
 );
@@ -149,7 +149,14 @@ passport.use(
       if (domain == "messiah.edu") {
         const users = await tools.readContentfulUsers();
         if (users.hasOwnProperty(username)) {
-          return done(null, username);
+          return done(null, { user: username });
+        } else {
+          return done(null, {
+            user: username,
+            profile: {
+              name: `${profile.name.givenName} ${profile.name.familyName}`,
+            },
+          });
         }
       }
       return done(null, false);
@@ -165,7 +172,7 @@ app.get(
 
 app.get(
   "/auth/microsoft/callback",
-  passport.authenticate("microsoft", { failureRedirect: "/about" }),
+  passport.authenticate("microsoft", { failureRedirect: "/external" }),
   function (req, res) {
     res.redirect(process.env.CALLBACK_REDIRECT);
   },
@@ -173,9 +180,9 @@ app.get(
 
 app.get("/login", (req, res) => {
   if (req.user) {
-    res.send(req.user);
+    res.json(req.user);
   } else {
-    res.send(false);
+    res.json(false);
   }
 });
 
@@ -332,6 +339,13 @@ app.get("/about", (req, res) => {
   by Ben Huang
   <br> 
   Messiah University
+  </p>`;
+  res.send(message);
+});
+
+app.get("/external", (req, res) => {
+  const message = `<p style="color: red; width: fit-content; margin: auto; text-align: center">
+  
   </p>`;
   res.send(message);
 });
