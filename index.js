@@ -345,7 +345,7 @@ app.get("/about", (req, res) => {
 
 app.get("/external", (req, res) => {
   const message = `<p style="color: red; width: fit-content; margin: auto; text-align: center">
-  
+    Your account doesn't associate with Messiah University.
   </p>`;
   res.send(message);
 });
