@@ -10,3 +10,4 @@ utils.insertToTable = require("./insertToTable").insertToTable;
 utils.selectAll = require("./selectAll");
 utils.deleteTask = require("./deleteTask");
 utils.updateUsage = require("./updateUsage");
+utils.selectByCreatedBy = require("./selectByCreatedBy");
