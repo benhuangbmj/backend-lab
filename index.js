@@ -151,12 +151,18 @@ passport.use(
         if (users.hasOwnProperty(username)) {
           return done(null, { user: username });
         } else {
-          return done(null, {
+          const regexTitle = /professor|lecturer|adjunct/i;
+          const userProfile = {
             user: username,
             profile: {
               name: `${profile.name.givenName} ${profile.name.familyName}`,
             },
-          });
+          };
+          if (regexTitle.test(profile._json.jobTitle)) {
+            console.log(profile._json.jobTitle);
+            Object.assign(userProfile.profile, { roles: { admin: true } });
+          }
+          return done(null, userProfile);
         }
       }
       return done(null, false);
@@ -355,10 +361,18 @@ app.post("/delete-task", (req, res) => {
   res.end();
 });
 
+app.post("/set-supervisors", (req, res) => {
+  console.log(req.body);
+});
+
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
 
+require("./databases/utilities/setSupervisors")({
+  user: "js5354",
+  supervisors: [{ value: "bhuang" }],
+});
 /*
 app.get("/deploy", (req, res) => {
   const repo = req.query.repo;
