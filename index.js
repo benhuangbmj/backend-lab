@@ -160,7 +160,9 @@ passport.use(
           };
           if (regexTitle.test(profile._json.jobTitle)) {
             console.log(profile._json.jobTitle);
-            Object.assign(userProfile.profile, { roles: { admin: true } });
+            Object.assign(userProfile.profile, {
+              roles: { admin: true, developer: false },
+            });
           }
           return done(null, userProfile);
         }
