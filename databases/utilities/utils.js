@@ -11,3 +11,4 @@ utils.selectAll = require("./selectAll");
 utils.deleteTask = require("./deleteTask");
 utils.updateUsage = require("./updateUsage");
 utils.selectByCreatedBy = require("./selectByCreatedBy");
+utils.insertMultipleRows = require("./insertMultipleRows");
