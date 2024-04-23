@@ -1,15 +1,22 @@
 const Shared = require("./shared").Shared;
-
+const insertMultipleRows = require("./insertMultipleRows");
 function setSupervisors(data) {
 	const shared = new Shared();
 	shared.openMainDb();
-	shared.mainDb.all(
-		"select * from supervision where user=?;",
+	shared.mainDb.run(
+		"DELETE FROM supervision WHERE user=?;",
 		[data.user],
-		(err, rows) => {
-			console.log(rows);
+		(err) => {
+			if (err) console.log(err);
+			shared.closeMainDb();
 		},
 	);
+	if (data.supervisors.length > 0) {
+		insertMultipleRows({
+			tbName: "supervision",
+			rows: data.supervisors,
+		});
+	}
 }
 
 module.exports = setSupervisors;
