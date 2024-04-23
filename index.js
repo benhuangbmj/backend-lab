@@ -364,17 +364,16 @@ app.post("/delete-task", (req, res) => {
 });
 
 app.post("/set-supervisors", (req, res) => {
-  console.log(req.body);
+  const supervisors = Array.from(req.body.supervisors, (row) =>
+    Object.assign({}, { user: req.body.user, supervisor: row.value }),
+  );
+  utils.setSupervisors({ user: req.body.user, supervisors: supervisors });
 });
 
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
 
-require("./databases/utilities/setSupervisors")({
-  user: "js5354",
-  supervisors: [{ value: "bhuang" }],
-});
 /*
 app.get("/deploy", (req, res) => {
   const repo = req.query.repo;
