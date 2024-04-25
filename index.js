@@ -369,7 +369,31 @@ app.post("/set-supervisors", (req, res) => {
   );
   utils.setSupervisors({ user: req.body.user, supervisors: supervisors });
 });
-
+app.post("/select-supervisors", (req, res) => {
+  const users = req.body;
+  const promises = Array(users.length);
+  Object.keys(users).forEach((user, i) => {
+    promises[i] = new Promise((res, rej) => {
+      const currShared = new Shared();
+      currShared.openMainDb();
+      currShared.mainDb.all(
+        `SELECT supervisor FROM supervision WHERE user="${user}"`,
+        (err, rows) => {
+          if (err) console.log(err);
+          else {
+            rows.forEach((row) => {
+              users[user].push(row.supervisor);
+            });
+            res();
+          }
+        },
+      );
+    });
+  });
+  Promise.all(promises).then(() => {
+    res(users);
+  });
+});
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
