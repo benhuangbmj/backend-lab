@@ -391,7 +391,7 @@ app.post("/select-supervisors", (req, res) => {
     });
   });
   Promise.all(promises).then(() => {
-    res(users);
+    res.json(users);
   });
 });
 app.get("*", (req, res) => {
