@@ -1,3 +1,4 @@
 const backupUsers = require("./backupUsers");
 const readContentfulUsers = require("./readContentfulUsers");
-module.exports = { backupUsers, readContentfulUsers };
+const fetchBlogPosts = require("./fetchBlogPosts");
+module.exports = { backupUsers, readContentfulUsers, fetchBlogPosts };
