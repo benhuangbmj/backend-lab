@@ -6,7 +6,7 @@ module.exports = async function () {
 		space: process.env.SPACE_ID,
 		accessToken: process.env.ACCESS_TOKEN,
 	});
-	let data = await client.getEntries();
-	output = data.items[0].fields.tutorInfo;
+	const entry = await client.getEntry(process.env.ENTRY_ID_USERDATA);
+	const output = entry.fields.tutorInfo;
 	return output;
 };
