@@ -394,6 +394,12 @@ app.post("/select-supervisors", (req, res) => {
     res.json(users);
   });
 });
+app.get("/blog-posts", (req, res) => {
+  tools.fetchBlogPosts().then((data) => {
+    console.log(data.items);
+    res.json(data);
+  });
+});
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
