@@ -2,16 +2,12 @@ require("dotenv").config({ path: "../.env" });
 const fs = require("fs");
 const path = require("path");
 const dayjs = require("dayjs");
-const contentful = require("contentful");
+const readContentfulUsers = require("./readContentfulUsers");
 
 function backupUsers() {
-	const client = contentful.createClient({
-		space: process.env.SPACE_ID,
-		accessToken: process.env.ACCESS_TOKEN,
-	});
+	readContentfulUsers().then(function (data) {
+		const tutorInfoJSON = JSON.stringify(data);
 
-	client.getEntries().then(function (entries) {
-		const tutorInfoJSON = JSON.stringify(entries.items[0].fields.tutorInfo);
 		let date = dayjs().format("MMDDYYYY");
 		const backupPath = path.resolve(
 			__dirname,
