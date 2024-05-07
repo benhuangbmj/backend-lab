@@ -47,11 +47,9 @@ async function updateUsage() {
   }
   const { utils } = require("./utils");
   const rows = await prepare();
-  rows.forEach((e) => {
-    utils.insertToTable({
-      tbName: "usage",
-      row: e,
-    });
+  utils.insertMultipleRows({
+    tbName: "usage",
+    rows: rows,
   });
   sheets.spreadsheets.values.clear({
     spreadsheetId: process.env.GOOGLE_SHEET_ID,

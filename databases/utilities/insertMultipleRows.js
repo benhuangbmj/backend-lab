@@ -1,4 +1,4 @@
-function insertMultipleRows({ tbName, rows, io, message }) {
+function insertMultipleRows({ tbName, rows, io = null, message }) {
 	const Shared = require("./shared").Shared;
 	const shared = new Shared();
 	shared.openMainDb();
