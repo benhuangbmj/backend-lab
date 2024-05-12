@@ -94,15 +94,18 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text({ type: "text/plain" }));
-app.use(
-  "/",
-  express.static(path.join(__dirname, "..", "cmp-lab-schedule", "dist")),
-);
 //issue: the following rules are in place to fix the incorrect routing of the vite build. Figure out how to configure vite properly to avoid this issue systematically
 app.use(
   "/src/img",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/img")),
 );
+const routes = ["/", "/profile", "/progress", "/admin", "/experimental"];
+routes.forEach((route) => {
+  app.use(
+    route,
+    express.static(path.join(__dirname, "..", "cmp-lab-schedule", "dist")),
+  );
+});
 app.use(
   session({
     secret: process.env.EXPRESS_SESSION_SECRET,
@@ -400,6 +403,7 @@ app.get("/blog-posts", (req, res) => {
     res.json(data);
   });
 });
+
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
