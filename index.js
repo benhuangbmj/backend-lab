@@ -174,18 +174,31 @@ passport.use(
     },
   ),
 );
-app.get(
-  "/auth/microsoft",
-  passport.authenticate("microsoft", {
-    prompt: "select_account",
-  }),
-);
+app
+  .route("/auth/microsoft")
+  .get(
+    passport.authenticate("microsoft", {
+      prompt: "select_account",
+    }),
+  )
+  .post((req, res) => {
+    req.session.to = req.body;
+    res.end();
+  });
 
 app.get(
   "/auth/microsoft/callback",
-  passport.authenticate("microsoft", { failureRedirect: "/external" }),
+  (req, res, next) => {
+    req.temp = req.session;
+    passport.authenticate("microsoft", { failureRedirect: "/external" })(
+      req,
+      res,
+      next,
+    );
+  },
   function (req, res) {
-    res.redirect(process.env.CALLBACK_REDIRECT);
+    const route = req.temp.to ? req.temp.to : "";
+    res.redirect(process.env.CALLBACK_REDIRECT + route);
   },
 );
 
