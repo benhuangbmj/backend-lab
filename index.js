@@ -150,8 +150,18 @@ passport.use(
       const username = profile.userPrincipalName.match(regexUsername)[0];
       const domain = profile.userPrincipalName.match(regexDomain)[0];
       if (domain == "messiah.edu") {
+        const userProfile = {
+          user: username,
+          name: `${profile.name.givenName} ${profile.name.familyName}`,
+          title: profile.jobTitle,
+        };
         const users = await tools.readContentfulUsers();
         if (users.hasOwnProperty(username)) {
+          const currUser = Object.assign(
+            _.cloneDeep(users[username]),
+            userProfile,
+          );
+          console.log(_.isEqual(users[username], currUser));
           return done(null, { user: username });
         } else {
           const regexTitle = /student/i;
@@ -159,6 +169,7 @@ passport.use(
             user: username,
             profile: {
               name: `${profile.name.givenName} ${profile.name.familyName}`,
+              title: profile.jobTitle,
             },
           };
           if (!regexTitle.test(profile._json.jobTitle)) {
@@ -451,3 +462,4 @@ app.get("/deploy", (req, res) => {
   }
 });
 */
+tools.update(); //remove
