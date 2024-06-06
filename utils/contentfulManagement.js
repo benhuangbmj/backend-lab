@@ -36,8 +36,14 @@ async function updateUserInfo({ userInfo }) {
 		},
 		updated,
 	);
-	//console.log(published.fields.tutorInfo["en-US"]); //remove
-	console.log("updateUserInfo");
+	console.log("User info updated!");
 }
-
-module.exports = { updateUserInfo };
+async function injectTitle({ userInfo }) {
+	for (let user in userInfo) {
+		if (/\d+/.test(user)) {
+			userInfo[user].title = "Student";
+		}
+	}
+	updateUserInfo({ userInfo: userInfo });
+}
+module.exports = { updateUserInfo, injectTitle };
