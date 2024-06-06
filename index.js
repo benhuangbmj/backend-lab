@@ -151,8 +151,6 @@ passport.use(
       const domain = profile.userPrincipalName.match(regexDomain)[0];
       if (domain == "messiah.edu") {
         const userProfile = {
-          user: username,
-          name: `${profile.name.givenName} ${profile.name.familyName}`,
           title: profile._json.jobTitle,
         };
         const users = await tools.readContentfulUsers();
