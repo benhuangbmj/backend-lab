@@ -12,33 +12,32 @@ const client = contentful.createClient(
 		},
 	},
 );
-async function update() {
+async function updateUserInfo({ userInfo }) {
 	const entry = await client.entry.get({
-		entryId: "3oATflDlhlycf5gXjJrPma",
+		entryId: process.env.ENTRY_ID_USERDATA,
 	});
-	//console.log(entry.fields.tutorInfo["en-US"]);
 	const data = {
 		tutorInfo: {
-			"en-US": {},
+			"en-US": userInfo,
 		},
 	};
-	const update = await client.entry.update(
+	const updated = await client.entry.update(
 		{
-			entryId: "3oATflDlhlycf5gXjJrPma",
+			entryId: process.env.ENTRY_ID_USERDATA,
 		},
 		{
 			fields: data,
 			sys: entry.sys,
 		},
 	);
-	const publish = await client.entry.publish(
+	const published = await client.entry.publish(
 		{
-			entryId: "3oATflDlhlycf5gXjJrPma",
+			entryId: process.env.ENTRY_ID_USERDATA,
 		},
-		update,
+		updated,
 	);
-	console.log(publish);
+	//console.log(published.fields.tutorInfo["en-US"]); //remove
+	console.log("updateUserInfo");
 }
 
-module.exports = { update };
-//3oATflDlhlycf5gXjJrPma
+module.exports = { updateUserInfo };

@@ -153,7 +153,7 @@ passport.use(
         const userProfile = {
           user: username,
           name: `${profile.name.givenName} ${profile.name.familyName}`,
-          title: profile.jobTitle,
+          title: profile._json.jobTitle,
         };
         const users = await tools.readContentfulUsers();
         if (users.hasOwnProperty(username)) {
@@ -161,7 +161,10 @@ passport.use(
             _.cloneDeep(users[username]),
             userProfile,
           );
-          console.log(_.isEqual(users[username], currUser));
+          if (!_.isEqual(users[username], currUser)) {
+            users[username] = currUser;
+            tools.updateUserInfo({ userInfo: users });
+          }
           return done(null, { user: username });
         } else {
           const regexTitle = /student/i;
@@ -169,11 +172,10 @@ passport.use(
             user: username,
             profile: {
               name: `${profile.name.givenName} ${profile.name.familyName}`,
-              title: profile.jobTitle,
+              title: profile._json.jobTitle.jobTitle,
             },
           };
           if (!regexTitle.test(profile._json.jobTitle)) {
-            console.log(profile._json.jobTitle);
             Object.assign(userProfile.profile, {
               roles: { admin: true, developer: false },
             });
@@ -462,4 +464,3 @@ app.get("/deploy", (req, res) => {
   }
 });
 */
-tools.update(); //remove
