@@ -99,6 +99,10 @@ app.use(
   "/src/img",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/img")),
 );
+app.use(
+  "/src/opencv",
+  express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/opencv")),
+);
 const routes = ["/", "/profile", "/progress", "/admin", "/experimental"];
 routes.forEach((route) => {
   app.use(
