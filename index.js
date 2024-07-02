@@ -103,7 +103,14 @@ app.use(
   "/src/opencv",
   express.static(path.resolve(__dirname, "..", "cmp-lab-schedule/src/opencv")),
 );
-const routes = ["/", "/profile", "/progress", "/admin", "/experimental"];
+const routes = [
+  "/",
+  "/profile",
+  "/progress",
+  "/admin",
+  "/experimental",
+  "/checkinwithid",
+];
 routes.forEach((route) => {
   app.use(
     route,
