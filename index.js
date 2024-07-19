@@ -106,6 +106,7 @@ const routes = [
   "/admin",
   "/experimental",
   "/checkinwithid",
+  "/checkinwithface",
 ];
 routes.forEach((route) => {
   app.use(
