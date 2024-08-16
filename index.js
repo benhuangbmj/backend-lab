@@ -108,6 +108,7 @@ const routes = [
   "/checkinwithid",
   "/checkinwithface",
   "/dashboard",
+  "/dept/*",
 ];
 routes.forEach((route) => {
   app.use(
