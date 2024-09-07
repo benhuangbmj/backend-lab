@@ -251,9 +251,13 @@ class SocketIo {
   handleTasks(socket) {
     socket.on("fetchTasks", async (user) => {
       try {
-        const supTasks = await utils.selectByCreatedBy(user);
+        const supTasks = await utils.selectBySup(user);
         const userTasks = await utils.selectByUser(user);
-        socket.emit("receiveTasks", supTasks.concat(userTasks));
+        const createdTasks = await utils.selectByCreatedBy(user);
+        socket.emit(
+          "receiveTasks",
+          supTasks.concat(userTasks).concat(createdTasks),
+        );
       } catch (err) {
         console.log(err);
         socket.emit("receiveTasks", err);
