@@ -445,34 +445,3 @@ app.get("/blog-posts", (req, res) => {
 app.get("*", (req, res) => {
   res.redirect("/");
 }); //issue: Fallback route. The react router is not compatible with express router as of now.
-
-/*
-app.get("/deploy", (req, res) => {
-  const repo = req.query.repo;
-  {
-    switch (repo) {
-      case "backend":
-        exec("git pull", (err, output) => {
-          if (err) {
-            res.send(err);
-          }
-          res.send(output);
-        });
-        break;
-      case "frontend":
-        exec(
-          "cd ../cmp-lab-schedule && git pull && npm run build",
-          (err, output) => {
-            if (err) {
-              res.send(err);
-            }
-            res.send(output);
-          },
-        );
-        break;
-      default:
-        res.send("Can't find the repo");
-    }
-  }
-});
-*/
