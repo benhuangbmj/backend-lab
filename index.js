@@ -247,11 +247,14 @@ class SocketIo {
       try {
         const supTasks = await utils.selectBySup(user);
         const userTasks = await utils.selectByUser(user);
-        const createdTasks = await utils.selectByCreatedBy(user);
-        socket.emit(
-          "receiveTasks",
-          supTasks.concat(userTasks).concat(createdTasks),
-        );
+        let response = supTasks.concat(userTasks);
+        response = response.filter((outer, i) => {
+          const j = response.findIndex((inner) => {
+            return inner.task_id == outer.task_id;
+          });
+          return i == j;
+        });
+        socket.emit("receiveTasks", response);
       } catch (err) {
         console.log(err);
         socket.emit("receiveTasks", err);
