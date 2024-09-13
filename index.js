@@ -175,19 +175,13 @@ passport.use(
           }
           return done(null, { user: username });
         } else {
-          const regexTitle = /student/i;
           const userProfile = {
             user: username,
             profile: {
               name: `${profile.name.givenName} ${profile.name.familyName}`,
-              title: profile._json.jobTitle.jobTitle,
+              title: profile?._json?.jobTitle,
             },
           };
-          if (!regexTitle.test(profile._json.jobTitle)) {
-            Object.assign(userProfile.profile, {
-              roles: { admin: true, developer: false },
-            });
-          }
           return done(null, userProfile);
         }
       }
