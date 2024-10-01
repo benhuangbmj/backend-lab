@@ -6,9 +6,9 @@ exports.selectByUser = (user) => {
     const db = shared.openMainDb();
     const sql = `
       SELECT * FROM progress
-      WHERE user = ? AND created_by != ?;
+      WHERE user = ?;
     `;
-    db.all(sql, [user, user], (err, rows) => {
+    db.all(sql, [user], (err, rows) => {
       if (err) {
         rej(err);
       }
