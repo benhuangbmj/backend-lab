@@ -1,13 +1,6 @@
-test.js
 node_modules
-.upm
 *.db
-tests
-*.sql
-package-lock.json
-*.sh
 certificates
 .env
-scripts/
 credentials/
 backup/
