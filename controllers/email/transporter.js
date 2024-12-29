@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 require("dotenv").config({ path: "../../.env" });
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: process.env.SMTP_SERVER,
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
